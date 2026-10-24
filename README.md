@@ -1,39 +1,224 @@
-# Centralized Computer Monitoring
+<div align="center">
 
-Stage 4 establishes real LAN reporting: the Monitoring Agent registers with the Monitoring Server, receives an API token, and continuously reports heartbeat and metrics with automatic reconnection. Stages 1–3 (architecture, local collection, server persistence) remain unchanged.
+# 🖥️ College PC Monitoring
 
-## Layout
+**Мониторинг компьютеров колледжа в локальной сети — с одного рабочего места администратора.**
 
-- `server/` — FastAPI REST backend, SQLite persistence, token-based Agent API, and future alert/event/settings tables.
-- `agent/` — Windows-agent collectors for real local CPU, RAM, disk, network, system, BIOS/UEFI, available GPU, and optional temperature data.
-- `installer/` — reserved for future server and agent installers; no installer is implemented.
+Процессор · память · диски · сеть · видеокарта · температура · открытые порты
 
-## Run the server
+`Windows 11` · `Python 3.13` · `FastAPI` · `SQLite` · `pywebview` · `RU / AM / EN`
 
-PowerShell:
+</div>
 
-```powershell
-cd "C:\Users\USER\Desktop\Arajin Ashxatanq Excel\server"
-py -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-Copy-Item .env.example .env
-python -m uvicorn app.main:app --reload
+---
+
+## Содержание
+
+- [Что это](#что-это)
+- [Возможности](#возможности)
+- [Как это работает](#как-это-работает)
+- [Быстрый старт](#быстрый-старт)
+- [Требования](#требования)
+- [Где хранятся данные](#где-хранятся-данные)
+- [Безопасность](#безопасность)
+- [Сборка из исходников](#сборка-из-исходников)
+- [Запуск для разработки и тесты](#запуск-для-разработки-и-тесты)
+- [Структура проекта](#структура-проекта)
+- [Решение проблем](#решение-проблем)
+
+---
+
+## Что это
+
+Система из двух программ:
+
+| Программа | Где запускается | Что делает |
+|---|---|---|
+| **MonitoringAdminApp.exe** | ПК администратора | Встроенный сервер (FastAPI + SQLite), веб-дашборд в отдельном окне, иконка в трее. Раздаёт программу пользователя по ссылке `/download`. |
+| **MonitoringAgentApp.exe** | ПК пользователя | Окно «Подключение к мониторингу» и служба Windows, которая сама стартует с системой и отправляет данные администратору. |
+
+Связь всегда начинает агент — сервер никогда не обращается к компьютерам пользователей сам. Каждый новый компьютер появляется в списке только после того, как администратор нажмёт **«Принять»**.
+
+## Возможности
+
+**Администратор**
+- 📊 Обзор: счётчики «В сети», «Не в сети», «Оповещения», «Ждут решения» и таблица компьютеров (имя, адрес, состояние, CPU, RAM, диск).
+- 🔍 Карточка компьютера: процессор, видеокарта, температура, открытые порты, скорость сети (основной адаптер, остальные свёрнуты), память, диски, BIOS, система.
+- 🔔 Оповещения и журнал событий, графики, пороги статусов с подтверждением тремя отчётами подряд (без «дребезга»).
+- ➕ «Добавить компьютер»: одна строка-код вида `A7K-29P-XXXX-XXXX`, в которую уже зашит адрес сервера.
+- ⚙️ Настройки: адрес сервера для пользователей (по умолчанию — автоопределение), подсказка по брандмауэру.
+- 🗂️ Закрытие окна сворачивает в трей — сервер продолжает принимать данные; выход — через «Выход» в трее.
+- 🌐 Интерфейс на русском, армянском и английском.
+
+**Пользователь**
+- 🔑 Подключение одним кодом: адрес сервера подставляется сам. Если код короткий (без адреса), появится поле для ручного ввода.
+- 🧭 «Мои параметры» и **«Сканировать компьютер»** — полная информация о своём ПК, даже без подключения к серверу.
+- 🔁 После перезагрузки связь восстанавливается сама; «Подключить заново» — переустановка по новому коду поверх старой.
+- 🌐 Окно, сообщения об ошибках и меню трея на RU / AM / EN.
+
+**Честные данные.** Если оборудование ничего не сообщает, показывается «нет данных»; если видеокарты нет — «не обнаружена». Значения никогда не придумываются.
+
+| Данные | Источник |
+|---|---|
+| CPU, RAM, диски, сеть, порты | `psutil` |
+| Модели CPU / GPU, BIOS, система | Windows CIM (`Get-CimInstance`) |
+| Видеопамять | реестр драйвера (64-битное значение, без потолка 4 ГБ) и `nvidia-smi` |
+| Загрузка и температура NVIDIA | `nvidia-smi` |
+| Температура системы | тепловые зоны Windows (ACPI / счётчики производительности) |
+
+## Как это работает
+
+```
+ ПК пользователя                                   ПК администратора
+┌──────────────────────────┐                     ┌───────────────────────────────┐
+│ MonitoringAgentApp.exe   │  1. код подключения │ MonitoringAdminApp.exe        │
+│  └─ служба Windows ──────┼────────────────────▶│  ├─ FastAPI :8000             │
+│     MonitoringAgent      │  2. «Принять»       │  ├─ SQLite                    │
+│                          │◀────────────────────┤  ├─ дашборд (pywebview)       │
+│                          │  3. токен           │  └─ /download → exe агента    │
+│                          │  4. heartbeat +     │                               │
+│                          │     метрики каждые  │                               │
+│                          │     5 секунд ──────▶│                               │
+└──────────────────────────┘                     └───────────────────────────────┘
 ```
 
-The health endpoint is available at `http://127.0.0.1:8000/health`; FastAPI documentation is at `http://127.0.0.1:8000/docs`. The server binds `HOST`/`PORT` from `server/.env` when started with `python -m app.main` (set `HOST=0.0.0.0` for LAN access). Before Agent registration, set distinct secure `AGENT_REGISTRATION_KEY` and `AGENT_TOKEN_PEPPER` values in `server/.env`.
+1. Администратор нажимает «Добавить компьютер» и передаёт пользователю код.
+2. Пользователь запускает программу, вводит код — ставится служба, отправляется заявка.
+3. Администратор нажимает «Принять» — агент получает токен (на сервере хранится только его хеш).
+4. Служба отправляет данные; через 45 секунд тишины компьютер считается «Не в сети».
 
-## Run the agent
+## Быстрый старт
 
-In a separate PowerShell window:
+> Готовые файлы — в разделе [**Releases**](../../releases).
 
-```powershell
-cd "C:\Users\USER\Desktop\Arajin Ashxatanq Excel\agent"
-py -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-Copy-Item .env.example .env
-python main.py
+**На ПК администратора**
+1. Скачайте `MonitoringAdminApp.exe` и запустите. На запрос брандмауэра Windows ответьте «Да» (откроется входящий TCP-порт сервера, по умолчанию `8000`).
+2. Задайте пароль администратора при первом входе.
+3. *Настройки* → проверьте **«Адрес сервера для пользователей»** (IP этого ПК из `ipconfig`). При необходимости впишите вручную и сохраните.
+4. Нажмите **«Добавить компьютер»** → **«Скопировать код»**.
+
+**На ПК пользователя**
+1. Откройте в браузере `http://<IP-администратора>:8000/download` и скачайте `MonitoringAgentApp.exe`.
+2. Запустите. Если Windows покажет *«Система Windows защитила ваш компьютер»* → **«Подробнее»** → **«Выполнить в любом случае»**. На запрос прав ответьте «Да».
+3. Вставьте код → **«Подключить»**.
+
+**Снова на ПК администратора** — нажмите **«Принять»**. Готово: компьютер появится в списке «В сети».
+
+## Требования
+
+| | |
+|---|---|
+| ОС | Windows 11 (64-bit). Windows 10 — пока не проверялась. |
+| Компонент окна | Microsoft Edge WebView2 Runtime (в Windows 11 уже встроен) |
+| Сеть | Оба ПК в одной локальной сети; входящий TCP-порт сервера (`8000`) разрешён на ПК администратора |
+| Права | Программе пользователя нужны права администратора один раз — для установки службы |
+| Адрес администратора | Желательно закрепить IP за ПК администратора в роутере (резервирование DHCP) |
+
+## Где хранятся данные
+
+Рядом с EXE ничего не создаётся — в папке остаётся только сам файл.
+
+| Что | Где |
+|---|---|
+| База и ключи администратора (`monitoring.db`, `.env`) | `%LOCALAPPDATA%\MonitoringAdmin` |
+| Журнал ошибок администратора | `%LOCALAPPDATA%\MonitoringAdmin\admin_app_error.log` |
+| Служба агента, её токен и журнал | `C:\Program Files\MonitoringAgent\service` |
+| Статус окна пользователя | `C:\ProgramData\MonitoringAgent` |
+
+## Безопасность
+
+- Ключ регистрации и «перец» для токенов создаются автоматически при первом запуске и не попадают в репозиторий.
+- Пароль администратора — PBKDF2 с солью; токены агентов хранятся только в виде хеша.
+- Один код подключения — один компьютер; код живёт 15 минут и удаляется у агента после одобрения.
+- Собираются только технические данные. Личные файлы, пароли и переписка не собираются.
+- Связь идёт по `http` внутри локальной сети — браузер поэтому пишет «Не защищено».
+
+> ⚠️ Если вы раньше пересылали архивы проекта с файлами `.env`, удалите `%LOCALAPPDATA%\MonitoringAdmin\.env` — при запуске создадутся новые ключи (компьютеры нужно будет подключить заново).
+
+**Удалить программу пользователя** (командная строка от имени администратора):
+
+```bat
+sc stop MonitoringAgent
+sc delete MonitoringAgent
+rmdir /s /q "C:\Program Files\MonitoringAgent"
 ```
 
-The agent registers with the server (registration key required), stores its API token in `.agent_token.json`, then reports heartbeat and metrics every `MONITORING_REPORT_INTERVAL_SECONDS`. Use `python main.py --local` for a local JSON snapshot without network communication.
+и удалите `MonitoringAgentApp.exe` из папки автозагрузки (`Win + R` → `shell:startup`).
+
+## Сборка из исходников
+
+Нужен Python 3.13. Подготовьте окружения (один раз):
+
+```powershell
+cd agent;  py -m venv .venv; .\.venv\Scripts\pip install -r requirements.txt; cd ..
+cd server; py -m venv .venv; .\.venv\Scripts\pip install -r requirements.txt pyinstaller; cd ..
+```
+
+Соберите всё одной командой — порядок важен: **служба → приложение пользователя → админ** (в админ встраивается exe пользователя):
+
+```bat
+installer\server\build.bat
+```
+
+Результат: `server\dist\MonitoringAdminApp.exe` (~66 МБ, внутри уже есть `MonitoringAgentApp.exe`).
+
+## Запуск для разработки и тесты
+
+```powershell
+# сервер
+cd server
+Copy-Item .env.example .env      # впишите свои AGENT_REGISTRATION_KEY и AGENT_TOKEN_PEPPER
+.\.venv\Scripts\python -m uvicorn app.main:app --reload
+
+# агент: локальный снимок без сети
+cd agent
+.\.venv\Scripts\python main.py --local --once
+```
+
+Тесты:
+
+```powershell
+cd server; .\.venv\Scripts\python -m pytest -q
+cd agent;  .\.venv\Scripts\python -m pytest -q
+```
+
+## Структура проекта
+
+```
+├── server/                  админское приложение
+│   ├── admin_app.py         точка входа EXE: сервер + окно + трей + брандмауэр
+│   ├── app/api/             REST: агенты, сопряжение, устройства, загрузка, настройки
+│   ├── app/monitoring/      статусы, оповещения, офлайн-детектор, очистка истории
+│   ├── app/services/        безопасность, сопряжение, авторизация администратора
+│   ├── app/static/          дашборд (app.js, styles.css)
+│   └── app/templates/       HTML-страницы
+├── agent/                   программа пользователя
+│   ├── app.py               окно «Подключение к мониторингу», установка службы, сканирование
+│   ├── service.py           служба Windows
+│   ├── collector/           CPU, память, диски, сеть, порты
+│   ├── hardware/            видеокарта, BIOS, система (CIM, реестр, nvidia-smi)
+│   ├── sensors/             температура
+│   └── network/             клиент API и цикл отправки с повторами
+├── installer/               build.bat для сборки EXE
+└── branding/                иконки
+```
+
+## Решение проблем
+
+| Проблема | Что сделать |
+|---|---|
+| Страница `/download` не открывается с другого ПК | Проверьте IP администратора (`ipconfig`), что оба ПК в одной сети и что порт `8000` разрешён в брандмауэре. |
+| В окне «Добавить» не тот IP (VPN, VirtualBox) | *Настройки* → «Адрес сервера для пользователей» → впишите правильный IP. |
+| «Код не найден или истёк» | Код действует 15 минут — возьмите новый в окне «Добавить». |
+| Компьютер «Не в сети» после перезагрузки | Подождите минуту; если не появился — пришлите `agent_service.log` из `C:\Program Files\MonitoringAgent\service`. |
+| Температура «нет данных» | Устройство не отдаёт датчики через Windows — это нормально, значения не придумываются. |
+
+---
+
+<div align="center">
+
+**English** — LAN PC monitoring for a college: an admin app with a built-in server and dashboard, and a Windows agent installed with one connection code. Collects CPU, RAM, disks, network, GPU, temperature and open ports. UI in Russian, Armenian and English.
+
+**Հայերեն** — Քոլեջի համակարգիչների մոնիտորինգ տեղական ցանցում․ ադմինիստրատորի ծրագիր՝ ներկառուցված սերվերով և վահանակով, և Windows ագենտ, որը տեղադրվում է մեկ միացման կոդով։ Հավաքում է CPU, RAM, սկավառակների, ցանցի, վիդեոքարտի, ջերմաստիճանի և բաց պորտերի տվյալները։
+
+</div>
