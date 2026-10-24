@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Мониторинг{% endblock %} · Мониторинг LAN</title>
+  <link rel="stylesheet" href="/static/styles.css?v=8">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FF7F6B' stroke-width='2.4'%3E%3Cpath d='M2 12h4l3-7 4 14 3-7h6'/%3E%3C/svg%3E">
+</head>
+<body data-page="{% block page %}dashboard{% endblock %}" {% block body_attrs %}{% endblock %}>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="logo">{% include "icons/pulse.svg" %}</span>
+        <div><div class="name" data-i18n="app.name">Мониторинг</div><div class="sub">LAN · v0.6</div></div>
+      </div>
+      <nav class="nav">
+        <a href="/" class="{% if page_name == 'dashboard' %}active{% endif %}">{% include "icons/grid.svg" %}<span data-i18n="nav.dashboard">Обзор</span></a>
+        <a href="/devices" class="{% if page_name == 'devices' or page_name == 'device' %}active{% endif %}">{% include "icons/monitor.svg" %}<span data-i18n="nav.devices">Компьютеры</span></a>
+        <a href="/alerts" class="{% if page_name == 'alerts' %}active{% endif %}">{% include "icons/bell.svg" %}<span data-i18n="nav.alerts">Оповещения</span></a>
+        <a href="/events" class="{% if page_name == 'events' %}active{% endif %}">{% include "icons/list.svg" %}<span data-i18n="nav.events">События</span></a>
+        <a href="/analytics" class="{% if page_name == 'analytics' %}active{% endif %}">{% include "icons/chart.svg" %}<span data-i18n="nav.analytics">Графики</span></a>
+        <a href="/settings" class="{% if page_name == 'settings' %}active{% endif %}">{% include "icons/sliders.svg" %}<span data-i18n="nav.settings">Настройки</span></a>
+      </nav>
+      <div class="admin-chip">
+        <span class="avatar">А</span>
+        <div><div class="a-name" data-i18n="user.admin">Администратор</div><div class="a-mail">admin@local</div></div>
+      </div>
+      <div class="lang-switch" title="Language / Լեզու / Язык">
+        <button data-lang="ru">RU</button>
+        <button data-lang="am">AM</button>
+        <button data-lang="en">EN</button>
+      </div>
+    </aside>
+    <div class="main">
+      <div class="topbar">
+        <div>
+          <h1 id="page-title">{% block pagetitle %}Дашборд{% endblock %}</h1>
+          <div class="when" id="page-subtitle">Загрузка…</div>
+        </div>
+        <div class="top-right">
+          <span class="pill" id="server-pill" title="Связь с сервером"><i></i>сервер</span>
+          <button class="btn-primary" id="add-device-btn" data-i18n="btn.addDevice">＋ Добавить компьютер</button>
+        </div>
+      </div>
+      <div class="content">
+        {% block content %}{% endblock %}
+      </div>
+      <div id="modal-root"></div>
+    </div>
+  </div>
+  <script src="/static/app.js?v=8"></script>
+</body>
+</html>

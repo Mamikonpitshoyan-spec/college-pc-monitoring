@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Алерты{% endblock %}
+{% block page %}alerts{% endblock %}
+{% block pagetitle %}Алерты{% endblock %}
+{% block content %}
+<div class="panel">
+  <div class="panel-head">
+    <div><h3 data-i18n="page.alerts">Алерты</h3><div class="sub" data-i18n="sub.alerts">создаются при входе показателя во ВНИМАНИЕ или КРИТИЧНО; закрываются автоматически при восстановлении</div></div>
+    <span class="pill" id="alerts-filter-wrap">
+      <button class="chip active" data-filter="ALL" data-i18n="alerts.all">Все</button>
+      <button class="chip" data-filter="OPEN" data-i18n="alerts.open">Открытые</button>
+      <button class="chip" data-filter="RESOLVED" data-i18n="alerts.resolved">Закрытые</button>
+    </span>
+  </div>
+  <div id="alerts-box"><div class="state-box"><div class="skeleton-line"></div><div class="skeleton-line"></div></div></div>
+</div>
+{% endblock %}

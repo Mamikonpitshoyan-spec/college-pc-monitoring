@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Аналитика{% endblock %}
+{% block page %}analytics{% endblock %}
+{% block pagetitle %}Аналитика{% endblock %}
+{% block content %}
+<div class="panel">
+  <div class="panel-head">
+    <div><h3 data-i18n="analytics.title">История показателей</h3><div class="sub" data-i18n="sub.analytics">последние 240 отчётов агента (~20–40 минут)</div></div>
+    <select id="device-select" class="select"></select>
+  </div>
+  <div id="chart-box">
+    <div class="state-box"><div class="skeleton-line"></div><div class="skeleton-line"></div></div>
+  </div>
+</div>
+{% endblock %}

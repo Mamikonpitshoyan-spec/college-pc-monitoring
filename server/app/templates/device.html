@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Устройство{% endblock %}
+{% block page %}device{% endblock %}
+{% block pagetitle %}Устройство{% endblock %}
+{% block body_attrs %}data-device-id="{{ device_id }}"{% endblock %}
+
+{% block content %}
+<div class="dev-header panel">
+  <span class="dev-ico" id="dev-ico"></span>
+  <div class="dev-title">
+    <h2 id="dev-hostname">Загрузка…</h2>
+    <div class="sub" id="dev-meta"></div>
+  </div>
+  <div id="dev-badges" class="dev-badges"></div>
+  <a class="back" href="/" data-i18n="dev.back">← К списку</a>
+</div>
+
+<div id="device-content">
+  <div class="state-box"><div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
+</div>
+{% endblock %}

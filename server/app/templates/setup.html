@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Создание пароля · Мониторинг LAN</title>
+<style>
+  :root {
+    --bg: #0A1520; --panel: #112233; --border: #1E3750;
+    --text: #E3ECF5; --muted: #7F9AB5;
+    --accent: #FF7F6B; --accent-soft: rgba(255, 127, 107,.10); --accent-line: rgba(255, 127, 107,.25);
+    --err: #FF4D6D; --mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg); color: var(--text); font-size: 14px;
+    min-height: 100vh; display: grid; place-items: center;
+  }
+  .card {
+    width: min(400px, 92vw); background: var(--panel); border: 1px solid var(--border);
+    border-radius: 12px; padding: 26px;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+  .logo { width: 36px; height: 36px; border-radius: 9px; background: var(--accent-soft); display: grid; place-items: center; }
+  .logo svg { width: 22px; height: 22px; stroke: var(--accent); }
+  h1 { font-size: 16px; font-weight: 650; }
+  h1 span { color: var(--accent); }
+  .sub { color: var(--muted); font-size: 12px; margin-top: 3px; }
+  label { display: block; color: var(--muted); font-size: 12px; margin: 14px 0 5px; }
+  input {
+    width: 100%; padding: 10px 12px; border-radius: 8px; font-size: 14px;
+    background: #15293C; border: 1px solid var(--border); color: var(--text); font-family: inherit;
+  }
+  input:focus { outline: none; border-color: var(--accent-line); }
+  button {
+    width: 100%; margin-top: 16px; padding: 11px; border-radius: 8px; cursor: pointer;
+    font-size: 14px; font-weight: 600; font-family: inherit; color: #0A1520;
+    background: var(--accent); border: none;
+  }
+  button:hover { filter: brightness(1.1); }
+  .err { color: var(--err); font-size: 12.5px; margin-top: 10px; display: {% if error %}block{% else %}none{% endif %}; }
+  .lang { display: flex; gap: 4px; justify-content: flex-end; margin-top: 14px; }
+  .pw-wrap { position: relative; }
+  .pw-eye {
+    position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; cursor: pointer; font-size: 16px;
+    color: var(--muted); padding: 4px; margin: 0; width: auto;
+  }
+  input[type="password"], input[type="text"] { padding-right: 38px; }
+  .lang button {
+    width: auto; margin: 0; padding: 3px 8px; font-size: 10.5px; font-weight: 700;
+    color: var(--muted); background: transparent; border: 1px solid var(--border); border-radius: 6px;
+  }
+  .lang button.active { color: var(--accent); border-color: var(--accent-line); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="brand">
+      <span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M2 12h4l3-7 4 14 3-7h6"/></svg></span>
+      <div><h1>Мониторинг <span>LAN</span></h1><div class="sub" id="sub">{% if is_setup %}Придумайте пароль администратора — он понадобится при каждом входе{% else %}Введите пароль администратора{% endif %}</div></div>
+    </div>
+    <form method="post" {% if is_setup %}action="/setup"{% else %}action="/login"{% endif %}>
+      {% if is_setup %}
+      <label id="l-p1">Пароль (минимум 4 символа)</label>
+      <div class="pw-wrap"><input type="password" name="password" required minlength="4" id="p1"><button type="button" class="pw-eye" data-eye="p1">👁</button></div>
+      <label id="l-p2">Повторите пароль</label>
+      <div class="pw-wrap"><input type="password" name="confirm" required minlength="4" id="p2"><button type="button" class="pw-eye" data-eye="p2">👁</button></div>
+      {% else %}
+      <label id="l-p1">Пароль</label>
+      <div class="pw-wrap"><input type="password" name="password" required autofocus id="p1"><button type="button" class="pw-eye" data-eye="p1">👁</button></div>
+      {% endif %}
+      <button type="submit" id="l-submit">{% if is_setup %}Создать и войти{% else %}Войти{% endif %}</button>
+      <div class="err" id="err">Неверный пароль. Попробуйте ещё раз.</div>
+    </form>
+    <div class="lang">
+      <button data-lang="ru" class="active">RU</button>
+      <button data-lang="am">ՀԱՅ</button>
+      <button data-lang="en">EN</button>
+    </div>
+  </div>
+<script>
+const LANGS = {
+  ru: {setup: "Придумайте пароль администратора — он понадобится при каждом входе",
+       login: "Введите пароль администратора", p1: "Пароль (минимум 4 символа)", p2: "Повторите пароль",
+       pLogin: "Пароль", submitSetup: "Создать и войти", submitLogin: "Войти",
+       err: "Неверный пароль. Попробуйте ещё раз.", err2: "Пароли не совпадают."},
+  am: {setup: "Հորինեք ադմինիստրատորի գաղտնաբառը — այն անհրաժեշտ կլինի ամեն մուտքի ժամանակ",
+       login: "Մուտքագրեք ադմինիստրատորի գաղտնաբառը", p1: "Գաղտնաբառ (առնվազն 4 նշան)", p2: "Կրկնեք գաղտնաբառը",
+       pLogin: "Գաղտնաբառ", submitSetup: "Ստեղծել և մտնել", submitLogin: "Մտնել",
+       err: "Սխալ գաղտնաբառ։ Փորձեք նորից։", err2: "Գաղտնաբառերը չեն համընկնում։"},
+  en: {setup: "Create the administrator password — you will need it at every login",
+       login: "Enter the administrator password", p1: "Password (minimum 4 characters)", p2: "Repeat the password",
+       pLogin: "Password", submitSetup: "Create and sign in", submitLogin: "Sign in",
+       err: "Wrong password. Try again.", err2: "Passwords do not match."},
+};
+let lang = "ru";
+try { const saved = localStorage.getItem("monitoring_lang"); if (LANGS[saved]) lang = saved; } catch (e) {}
+function apply() {
+  const t = LANGS[lang];
+  const setup = document.querySelectorAll(".pw-eye").forEach(function (eye) {
+  eye.addEventListener("click", function () {
+    const input = document.getElementById(eye.dataset.eye);
+    input.type = input.type === "password" ? "text" : "password";
+    eye.textContent = input.type === "password" ? "👁" : "🙈";
+  });
+});
+document.body.dataset.setup === "1";
+  document.getElementById("sub").textContent = setup ? t.setup : t.login;
+  document.getElementById("l-p1").textContent = setup ? t.p1 : t.pLogin;
+  const submit = document.getElementById("l-submit");
+  submit.textContent = setup ? t.submitSetup : t.submitLogin;
+  const p2 = document.getElementById("l-p2");
+  if (p2) p2.textContent = t.p2;
+  const err = document.getElementById("err");
+  if (err && err.style.display === "block") err.textContent = setup ? t.err2 : t.err;
+  document.querySelectorAll(".lang button").forEach(function (b) {
+    b.classList.toggle("active", b.dataset.lang === lang);
+  });
+}
+document.addEventListener("click", function (event) {
+  const b = event.target.closest(".lang button");
+  if (!b) return;
+  lang = b.dataset.lang;
+  try { localStorage.setItem("monitoring_lang", lang); } catch (e) {}
+  apply();
+});
+document.body.dataset.setup = "{% if is_setup %}1{% else %}0{% endif %}";
+apply();
+</script>
+</body>
+</html>

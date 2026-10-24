@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Устройства{% endblock %}
+{% block page %}devices{% endblock %}
+{% block pagetitle %}Устройства{% endblock %}
+
+{% block content %}
+<div class="panel">
+  <div class="panel-head">
+    <div>
+      <h3 data-i18n="nav.devices">Устройства</h3>
+      <div class="sub" data-i18n="dash.devicesSub">все компьютеры с установленным агентом</div>
+    </div>
+  </div>
+  <div id="devices-table-box">
+    <div class="state-box" id="devices-state">
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line short"></div>
+    </div>
+  </div>
+</div>
+{% endblock %}

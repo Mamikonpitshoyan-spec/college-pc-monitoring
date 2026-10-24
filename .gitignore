@@ -1,0 +1,36 @@
+# Local Python environments and bytecode
+server/.venv/
+agent/.venv/
+__pycache__/
+*.py[cod]
+
+# Local server configuration and SQLite data
+server/.env
+server/monitoring.db
+server/test_monitoring.db
+
+# Agent local state (Level 4)
+agent/.env
+agent/.agent_token.json
+
+# PyInstaller build artifacts
+agent/build/
+agent/dist/
+
+# Секреты и локальные данные (никогда не публиковать)
+.env
+*.db
+.agent_token.json
+status.json
+*.log
+tmp*.tmp
+
+# Сборки и архивы с EXE (раздаются через GitHub Releases)
+build/
+dist/
+*.zip
+*.exe
+
+# Локальные служебные папки
+.claude/
+.tmp_coursework_template/

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Настройки{% endblock %}
+{% block page %}settings{% endblock %}
+{% block pagetitle %}Настройки{% endblock %}
+{% block content %}
+<div class="detail-grid">
+  <div class="panel">
+    <div class="panel-head"><div><h3 data-i18n="settings.thresholds">Пороги статусов</h3><div class="sub" data-i18n="settings.thresholdsSub">при изменении статус подтверждается 3 отчётами подряд</div></div></div>
+    <div id="thresholds-box"></div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div><h3 data-i18n="settings.system">Система</h3><div class="sub" data-i18n="settings.systemSub">текущие параметры сервера и агентов</div></div></div>
+    <div id="system-box"></div>
+    <div class="hint" data-i18n="settings.hint">Редактирование порогов и уведомления (email/Telegram) — на следующих уровнях развития системы.</div>
+  </div>
+</div>
+{% endblock %}

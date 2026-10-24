@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}События{% endblock %}
+{% block page %}events{% endblock %}
+{% block pagetitle %}События{% endblock %}
+{% block content %}
+<div class="panel">
+  <div class="panel-head">
+    <div><h3 data-i18n="events.title">Журнал событий</h3><div class="sub" data-i18n="sub.events">подключения, офлайны, смены статусов здоровья</div></div>
+  </div>
+  <div id="events-box"><div class="state-box"><div class="skeleton-line"></div><div class="skeleton-line"></div></div></div>
+</div>
+{% endblock %}

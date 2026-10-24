@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Дашборд{% endblock %}
+{% block page %}dashboard{% endblock %}
+{% block pagetitle %}Дашборд{% endblock %}
+
+{% block content %}
+<div class="cards" id="stat-cards">
+  <div class="stat skeleton-card"></div>
+  <div class="stat skeleton-card"></div>
+  <div class="stat skeleton-card"></div>
+  <div class="stat skeleton-card"></div>
+</div>
+
+<div class="panel" id="devices-panel">
+  <div class="panel-head">
+    <div>
+      <h3 data-i18n="nav.devices">Устройства</h3>
+      <div class="sub" data-i18n="dash.devicesSub">все компьютеры с установленным агентом</div>
+    </div>
+  </div>
+  <div id="devices-table-box">
+    <div class="state-box" id="devices-state">
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line short"></div>
+    </div>
+  </div>
+</div>
+{% endblock %}
