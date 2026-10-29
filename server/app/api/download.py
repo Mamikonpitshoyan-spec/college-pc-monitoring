@@ -83,6 +83,7 @@ _HTML = """<!doctype html>
   }
   .lang button.active { color: var(--accent); border-color: var(--accent-line); }
 </style>
+<link rel="stylesheet" href="/static/themes.css?v=1">
 </head>
 <body>
   <div class="card">
@@ -120,7 +121,7 @@ const LANGS = {
        warn: "If Windows shows “Windows protected your PC” — click “More info” → “Run anyway”.",
        dl: "⬇ Download the program (.exe)"},
 };
-let lang = "ru";
+let lang = document.documentElement.dataset.lang || "ru";
 try { const saved = localStorage.getItem("monitoring_lang"); if (LANGS[saved]) lang = saved; } catch (e) {}
 function apply() {
   const t = LANGS[lang];
@@ -153,7 +154,11 @@ apply();
 
 @router.get("/download", include_in_schema=False)
 def download_page() -> HTMLResponse:
-    return HTMLResponse(_HTML)
+    from app.api.monitoring import current_ui_prefs
+
+    prefs = current_ui_prefs()
+    return HTMLResponse(_HTML.replace(
+        '<html lang="ru">', f'<html lang="ru" data-theme="{prefs["theme"]}" data-lang="{prefs["lang"]}">', 1))
 
 
 @router.get("/download/agent-package", include_in_schema=False)

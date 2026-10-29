@@ -148,6 +148,56 @@ _HTML = """<!doctype html>
     color: var(--muted); background: transparent; border: 1px solid var(--border); border-radius: 6px;
   }
   .lang button.active { color: var(--accent); border-color: var(--accent-line); }
+  .lang { position: relative; }
+  .lang .theme-pop { top: calc(100% + 8px); bottom: auto; right: 0; }
+  .theme-btn { display: grid; place-items: center; }
+  .theme-pop {
+    position: absolute; bottom: calc(100% + 8px); right: 10px; z-index: 50; width: 190px; padding: 8px;
+    background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+  }
+  .theme-pop[hidden] { display: none; }
+  .theme-opt {
+    display: flex; align-items: center; gap: 10px; width: 100%; padding: 7px 8px; border: 1px solid transparent;
+    border-radius: 8px; background: transparent; color: var(--text); font: inherit; font-size: 13px; cursor: pointer;
+  }
+  .theme-opt:hover { background: var(--accent-soft); }
+  .theme-opt.active { border-color: var(--accent-line); background: var(--accent-soft); }
+  .swatch { width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--border); flex-shrink: 0; }
+  
+html[data-theme="light"] { --bg:#F4F7FA;--sidebar:#EAF0F5;--panel:#FFFFFF;--panel2:#F6F9FB; --border:#C5D1DC;--border-soft:#DFE6EC;--text:#0F1E2C;--muted:#4A5E70; --accent:#E2543F;--accent-soft:rgba(226,84,63,.10);--accent-line:rgba(226,84,63,.35); --ok:#16855A;--warn:#A87700;--crit:#C81E3A;--err:#C81E3A;--off:#7A8C9C }
+  html[data-theme="light"] body { background:var(--bg);color:var(--text) }
+  html[data-theme="light"] .b-ok { color:#0F6B47 }
+  html[data-theme="light"] .b-warn { color:#7D5800 }
+  html[data-theme="light"] .b-crit { color:#A3122B }
+  html[data-theme="light"] .stat.off .value { color:#5E7183 }
+  html[data-theme="light"] .track { background:#DDE5EC }
+  html[data-theme="light"] .btn, html[data-theme="light"] .btn-primary, html[data-theme="light"] a.dl { color:#FFFFFF }
+  html[data-theme="light"] .btn.ghost { color:var(--muted) }
+  html[data-theme="light"] .modal-overlay { background:rgba(15,30,44,.35) }
+  html[data-theme="light"] .mini-btn.auto.on { color:#B23A28 }
+  html[data-theme="light"] .b-neutral { color:#B23A28 }
+  html[data-theme="light"] input { background:#FFFFFF;color:#0F1E2C;border-color:#C5D1DC }
+  html[data-theme="lavender"] { --bg:#F5F4FB;--sidebar:#ECEAF8;--panel:#FFFFFF;--panel2:#F8F7FD; --border:#D6D2EE;--border-soft:#E8E5F6;--text:#2B2A45;--muted:#615F80; --accent:#7466D3;--accent-soft:rgba(116,102,211,.10);--accent-line:rgba(116,102,211,.35); --ok:#238A6A;--warn:#A87700;--crit:#C7385A;--err:#C7385A;--off:#8B89A6 }
+  html[data-theme="lavender"] body { background:var(--bg);color:var(--text) }
+  html[data-theme="lavender"] .b-ok { color:#1B6F55 }
+  html[data-theme="lavender"] .b-warn { color:#7D5800 }
+  html[data-theme="lavender"] .b-crit { color:#A32549 }
+  html[data-theme="lavender"] .stat.off .value { color:#6E6C8C }
+  html[data-theme="lavender"] .track { background:#E4E1F3 }
+  html[data-theme="lavender"] .btn, html[data-theme="lavender"] .btn-primary, html[data-theme="lavender"] a.dl { color:#FFFFFF }
+  html[data-theme="lavender"] .btn.ghost { color:var(--muted) }
+  html[data-theme="lavender"] .modal-overlay { background:rgba(43,42,69,.30) }
+  html[data-theme="lavender"] .mini-btn.auto.on { color:#5446B8 }
+  html[data-theme="lavender"] .b-neutral { color:#5446B8 }
+  html[data-theme="lavender"] input { background:#FFFFFF;color:#2B2A45;border-color:#D6D2EE }
+  html[data-theme="graphite"] { --bg:#121417;--sidebar:#16191D;--panel:#1C2026;--panel2:#21262D; --border:#2E353E;--border-soft:#262C34;--text:#E6EAF0;--muted:#8D97A4; --accent:#4FD1A5;--accent-soft:rgba(79,209,165,.12);--accent-line:rgba(79,209,165,.35); --ok:#6FCF97;--warn:#E9B949;--crit:#F2687B;--err:#F2687B;--off:#5D6673 }
+  html[data-theme="graphite"] body { background:var(--bg);color:var(--text) }
+  html[data-theme="graphite"] .btn, html[data-theme="graphite"] .btn-primary, html[data-theme="graphite"] a.dl { color:#0E1512 }
+  html[data-theme="graphite"] .mini-btn.auto.on { color:#8FE6C8 }
+  html[data-theme="graphite"] .b-neutral { color:#8FE6C8 }
+  html[data-theme="graphite"] input { background:#16191D;color:#E6EAF0 }
+  html[data-theme="graphite"] .btn.ghost { color:var(--muted) }
   .btn-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .src { color: var(--muted); font-size: 11.5px; margin: 0 2px 10px; }
   .loading { color: var(--muted); font-size: 13px; padding: 14px; text-align: center; }
@@ -158,7 +208,9 @@ _HTML = """<!doctype html>
 </head>
 <body>
   <div class="head"><div class="dot" id="dot"></div><h1 id="title">…</h1>
-    <div class="lang"><button data-lang="ru">RU</button><button data-lang="am">AM</button><button data-lang="en">EN</button></div>
+    <div class="lang"><button data-lang="ru">RU</button><button data-lang="am">AM</button><button data-lang="en">EN</button>
+      <button class="theme-btn" id="theme-btn"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.5-.8 1.5-1.5 0-.9-.7-1.3-.7-2.2 0-.8.7-1.3 1.5-1.3H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="15" cy="7.5" r="1"/></svg></button>
+      <div class="theme-pop" id="theme-pop" hidden><button class="theme-opt" data-theme-choice="sea"><span class="swatch" style="background:linear-gradient(135deg,#0A1520 50%,#FF7F6B 50%)"></span><span data-t="theme.sea"></span></button><button class="theme-opt" data-theme-choice="light"><span class="swatch" style="background:linear-gradient(135deg,#F4F7FA 50%,#E2543F 50%)"></span><span data-t="theme.light"></span></button><button class="theme-opt" data-theme-choice="lavender"><span class="swatch" style="background:linear-gradient(135deg,#F5F4FB 50%,#7466D3 50%)"></span><span data-t="theme.lavender"></span></button><button class="theme-opt" data-theme-choice="graphite"><span class="swatch" style="background:linear-gradient(135deg,#121417 50%,#4FD1A5 50%)"></span><span data-t="theme.graphite"></span></button></div></div>
   </div>
 
   <div class="layout">
@@ -224,6 +276,7 @@ const LANGS = {
        scan: "Сканировать компьютер", scanning: "Сканирую компьютер… это займёт 5–15 секунд",
        srcService: "Данные службы мониторинга", srcScan: "Локальное сканирование", noParams: "Данных пока нет — нажмите «Сканировать компьютер».",
        gpuNone: "не обнаружена", ports: "Открытые порты",
+       theme: "Тема", theme_sea: "Морская", theme_light: "Светлая", theme_lavender: "Лавандовая", theme_graphite: "Графит",
        reconnectHint: "Компьютер уже подключён. Чтобы подключить его к другому серверу или по новому коду — «Подключить заново».",
        back: "← Назад к статусу", fillAll: "Заполните все поля", reconnect: "Подключить заново",
        errCode: "Код не найден или истёк. Возьмите новый у администратора.",
@@ -260,6 +313,7 @@ const LANGS = {
        scan: "Սկանավորել համակարգիչը", scanning: "Սկանավորում եմ… 5–15 վայրկյան",
        srcService: "Մոնիտորինգի ծառայության տվյալներ", srcScan: "Տեղական սկանավորում", noParams: "Տվյալներ դեռ չկան — սեղմեք «Սկանավորել համակարգիչը»։",
        gpuNone: "չի հայտնաբերվել", ports: "Բաց պորտեր",
+       theme: "Թեմա", theme_sea: "Ծովային", theme_light: "Լուսավոր", theme_lavender: "Լավանդա", theme_graphite: "Գրաֆիտ",
        reconnectHint: "Համակարգիչն արդեն միացված է։ Այլ սերվերին կամ նոր կոդով միացնելու համար՝ «Նորից միացնել»։",
        back: "← Վերադառնալ կարգավիճակին", fillAll: "Լրացրեք բոլոր դաշտերը", reconnect: "Նորից միացնել",
        errCode: "Կոդը չի գտնվել կամ ժամկետանց է։ Վերցրեք նորը ադմինիստրատորից։",
@@ -296,6 +350,7 @@ const LANGS = {
        scan: "Scan computer", scanning: "Scanning the computer… 5–15 seconds",
        srcService: "Monitoring service data", srcScan: "Local scan", noParams: "No data yet — click “Scan computer”.",
        gpuNone: "not detected", ports: "Open ports",
+       theme: "Theme", theme_sea: "Sea", theme_light: "Light", theme_lavender: "Lavender", theme_graphite: "Graphite",
        reconnectHint: "This computer is already connected. To connect it to another server or with a new code, use “Connect again”.",
        back: "← Back to status", fillAll: "Fill in all fields", reconnect: "Connect again",
        errCode: "Code not found or expired. Get a new one from the administrator.",
@@ -325,8 +380,7 @@ const LANGS = {
        trayOpen: "Open", trayExit: "Exit",
        titleOk: "This computer is monitored", titleSetup: "Connect to monitoring"},
 };
-let lang = "ru";
-try { const saved = localStorage.getItem("monitoring_lang"); if (LANGS[saved]) lang = saved; } catch (e) {}
+let lang = document.documentElement.dataset.lang || "ru";
 let t = LANGS[lang];
 
 function applyLang() {
@@ -347,20 +401,46 @@ function applyLang() {
   document.title = "Monitoring Agent";
   const pb = document.getElementById("params-btn");
   if (pb) pb.textContent = paramsVisible ? t.back : t.params;
-  document.querySelectorAll(".lang button").forEach(function (b) {
+  document.getElementById("theme-btn").title = t.theme;
+  document.querySelectorAll("[data-t]").forEach(function (el) { el.textContent = t[el.dataset.t.replace(".", "_")]; });
+  markTheme();
+  document.querySelectorAll(".lang button[data-lang]").forEach(function (b) {
     b.classList.toggle("active", b.dataset.lang === lang);
   });
 }
 document.addEventListener("click", function (event) {
-  const b = event.target.closest(".lang button");
+  const b = event.target.closest(".lang button[data-lang]");
   if (!b) return;
   lang = b.dataset.lang;
   t = LANGS[lang];
-  try { localStorage.setItem("monitoring_lang", lang); } catch (e) {}
+  savePrefs();
   applyLang();
   refresh();
   if (paramsVisible && lastRendered) renderParams(lastRendered.snapshot, lastRendered.source);
   syncTrayLang();
+});
+
+// Тема и язык сохраняются в файл настроек (окно программы не хранит localStorage между запусками).
+function savePrefs() {
+  const prefs = { theme: document.documentElement.dataset.theme || "sea", lang: lang };
+  fetch("/prefs", { method: "POST", body: JSON.stringify(prefs) }).catch(function () {});
+}
+function markTheme() {
+  const current = document.documentElement.dataset.theme || "sea";
+  document.querySelectorAll("[data-theme-choice]").forEach(function (b) {
+    b.classList.toggle("active", b.dataset.themeChoice === current);
+  });
+}
+document.addEventListener("click", function (event) {
+  const pop = document.getElementById("theme-pop");
+  if (event.target.closest("#theme-btn")) { pop.hidden = !pop.hidden; return; }
+  const choice = event.target.closest("[data-theme-choice]");
+  if (choice) {
+    document.documentElement.dataset.theme = choice.dataset.themeChoice;
+    markTheme();
+    savePrefs();
+  }
+  if (!event.target.closest("#theme-pop")) pop.hidden = true;
 });
 
 // Язык пунктов меню в трее (Открыть / Выход) — как в окне.
@@ -708,6 +788,37 @@ def _remove_existing_service(dest_service: Path) -> None:
     raise RuntimeError("locked")
 
 
+PREFS_PATH = Path(os.getenv("LOCALAPPDATA", str(Path.home()))) / "MonitoringAgent" / "prefs.json"
+UI_THEMES = ("sea", "light", "lavender", "graphite")
+
+
+def read_prefs() -> dict:
+    prefs = {"theme": "sea", "lang": "ru"}
+    try:
+        saved = json.loads(PREFS_PATH.read_text(encoding="utf-8"))
+        if saved.get("theme") in UI_THEMES:
+            prefs["theme"] = saved["theme"]
+        if saved.get("lang") in ("ru", "am", "en"):
+            prefs["lang"] = saved["lang"]
+    except (OSError, ValueError, AttributeError):
+        pass
+    return prefs
+
+
+def save_prefs(update: dict) -> dict:
+    prefs = read_prefs()
+    if update.get("theme") in UI_THEMES:
+        prefs["theme"] = update["theme"]
+    if update.get("lang") in ("ru", "am", "en"):
+        prefs["lang"] = update["lang"]
+    try:
+        PREFS_PATH.parent.mkdir(parents=True, exist_ok=True)
+        PREFS_PATH.write_text(json.dumps(prefs), encoding="utf-8")
+    except OSError:
+        pass
+    return prefs
+
+
 _SCAN_LOCK = threading.Lock()
 _ERROR_CODES = {"bad_code", "need_server", "need_admin", "locked", "missing_files"}
 _TRAY_TEXT = {"ru": ("Открыть", "Выход"), "am": ("Բացել", "Ելք"), "en": ("Open", "Exit")}
@@ -753,7 +864,10 @@ class _StatusHandler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header("Content-Type", "text/html; charset=utf-8")
             self.end_headers()
-            self.wfile.write(_HTML.encode("utf-8"))
+            prefs = read_prefs()
+            page = _HTML.replace('<html lang="ru">', f'<html lang="ru" data-theme="{prefs["theme"]}" '
+                                                    f'data-lang="{prefs["lang"]}">', 1)
+            self.wfile.write(page.encode("utf-8"))
 
     def do_POST(self) -> None:  # noqa: N802 - http.server naming
         if self.path.startswith("/lang"):
@@ -763,6 +877,17 @@ class _StatusHandler(BaseHTTPRequestHandler):
             if value in _TRAY_TEXT:
                 _UI_LANG = value
             self._json({"ok": True})
+            return
+        if self.path.startswith("/prefs"):
+            # _UI_LANG объявлен global выше, в ветке /lang
+            length = int(self.headers.get("Content-Length", 0))
+            try:
+                update = json.loads(self.rfile.read(length) or b"{}")
+            except ValueError:
+                update = {}
+            prefs = save_prefs(update if isinstance(update, dict) else {})
+            _UI_LANG = prefs["lang"]
+            self._json(prefs)
             return
         if self.path.startswith("/setup/reconnect"):
             # Повторная установка поверх старой: перезапуск с правами админа в режиме ввода кода.
@@ -801,6 +926,8 @@ class _StatusHandler(BaseHTTPRequestHandler):
 def start_server() -> ThreadingHTTPServer:
     """Bind the local status server, walking the port range if busy."""
     last_error: Exception | None = None
+    # На Windows SO_REUSEADDR даёт второму экземпляру тот же порт — запросы уходят не в то окно.
+    ThreadingHTTPServer.allow_reuse_address = False
     for port in PORT_RANGE:
         try:
             server = ThreadingHTTPServer(("127.0.0.1", port), _StatusHandler)

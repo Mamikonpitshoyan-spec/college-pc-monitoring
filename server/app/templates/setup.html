@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="ru">
+{%- set prefs = ui_prefs() -%}
+<html lang="ru" data-theme="{{ prefs.theme }}" data-lang="{{ prefs.lang }}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -54,6 +55,7 @@
   }
   .lang button.active { color: var(--accent); border-color: var(--accent-line); }
 </style>
+  <link rel="stylesheet" href="/static/themes.css?v=1">
 </head>
 <body>
   <div class="card">
@@ -95,7 +97,7 @@ const LANGS = {
        pLogin: "Password", submitSetup: "Create and sign in", submitLogin: "Sign in",
        err: "Wrong password. Try again.", err2: "Passwords do not match."},
 };
-let lang = "ru";
+let lang = document.documentElement.dataset.lang || "ru";
 try { const saved = localStorage.getItem("monitoring_lang"); if (LANGS[saved]) lang = saved; } catch (e) {}
 function apply() {
   const t = LANGS[lang];

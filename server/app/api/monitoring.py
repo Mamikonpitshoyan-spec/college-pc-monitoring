@@ -79,6 +79,56 @@ def monitoring_config(database: Session = Depends(get_db)) -> dict:
     }
 
 
+UI_THEMES = ("sea", "light", "lavender", "graphite")
+UI_LANGS = ("ru", "am", "en")
+UI_PREFS_KEY = "ui_prefs"
+
+
+def current_ui_prefs() -> dict:
+    """Theme and language chosen in the dashboard (kept in the DB: the app window forgets localStorage)."""
+    from app.database.session import SessionLocal
+    from app.models.setting import Setting
+
+    prefs = {"theme": "sea", "lang": "ru"}
+    try:
+        with SessionLocal() as database:
+            row = database.scalar(select(Setting).where(Setting.key == UI_PREFS_KEY))
+            if row and row.value:
+                prefs.update({k: v for k, v in row.value.items() if k in prefs})
+    except Exception:  # noqa: BLE001 - first start: tables may not exist yet
+        pass
+    return prefs
+
+
+class UiPrefsUpdate(BaseModel):
+    theme: str | None = None
+    lang: str | None = None
+
+
+@router.put("/ui-prefs")
+def put_ui_prefs(payload: UiPrefsUpdate, database: Session = Depends(get_db)) -> dict:
+    from fastapi import HTTPException
+
+    from app.models.setting import Setting
+
+    prefs = current_ui_prefs()
+    if payload.theme is not None:
+        if payload.theme not in UI_THEMES:
+            raise HTTPException(status_code=422, detail="Unknown theme.")
+        prefs["theme"] = payload.theme
+    if payload.lang is not None:
+        if payload.lang not in UI_LANGS:
+            raise HTTPException(status_code=422, detail="Unknown language.")
+        prefs["lang"] = payload.lang
+    row = database.scalar(select(Setting).where(Setting.key == UI_PREFS_KEY))
+    if row is None:
+        database.add(Setting(key=UI_PREFS_KEY, value=prefs))
+    else:
+        row.value = prefs
+    database.commit()
+    return prefs
+
+
 class ServerAddressUpdate(BaseModel):
     address: str | None = None
 

@@ -15,6 +15,7 @@ router = APIRouter(tags=["auth"])
 
 _SESSION_COOKIE = admin_auth.SESSION_COOKIE
 _templates = Jinja2Templates(directory=str(Path(__file__).resolve().parents[1] / "templates"))
+_templates.env.globals["ui_prefs"] = __import__("app.api.monitoring", fromlist=["x"]).current_ui_prefs
 
 
 def require_admin_page(request: Request, database: Session = Depends(get_db)):

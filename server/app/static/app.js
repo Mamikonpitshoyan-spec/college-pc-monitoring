@@ -107,7 +107,7 @@ const I18N = {
     "pair.approve": "Принять", "pair.reject": "Отклонить", "pair.close": "Закрыть",
     "pair.approvedMsg": "Устройство одобрено и подключается…",
     "pair.downloadHint": "Установить приложение юзера на новый компьютер — скачайте установщик:",
-    "pair.copy": "Скопировать ссылку", "pair.copied": "Скопировано ✔", "pair.copyCode": "Скопировать код",
+    "pair.copy": "Скопировать ссылку", "pair.copied": "Скопировано ✔", "pair.copyCode": "Скопировать код", "theme.title": "Тема", "theme.sea": "Морская", "theme.light": "Светлая", "theme.lavender": "Лавандовая", "theme.graphite": "Графит",
     "b.pending": "ОЖИДАЕТ",
   },
   am: {
@@ -210,7 +210,7 @@ const I18N = {
     "pair.approve": "Ընդունել", "pair.reject": "Մերժել", "pair.close": "Փակել",
     "pair.approvedMsg": "Սարքը հաստատվեց և միանում է…",
     "pair.downloadHint": "Նոր համակարգչում տեղադրելու համար ներբեռնեք տեղակայիչը՝",
-    "pair.copy": "Պատճենել հղումը", "pair.copied": "Պատճենված է ✔", "pair.copyCode": "Պատճենել կոդը",
+    "pair.copy": "Պատճենել հղումը", "pair.copied": "Պատճենված է ✔", "pair.copyCode": "Պատճենել կոդը", "theme.title": "Թեմա", "theme.sea": "Ծովային", "theme.light": "Լուսավոր", "theme.lavender": "Լավանդա", "theme.graphite": "Գրաֆիտ",
     "b.pending": "ՍՊԱՍՈՒՄ",
   },
   en: {
@@ -313,12 +313,12 @@ const I18N = {
     "pair.approve": "Approve", "pair.reject": "Reject", "pair.close": "Close",
     "pair.approvedMsg": "Device approved and connecting…",
     "pair.downloadHint": "To install the user app on a new computer, download the installer:",
-    "pair.copy": "Copy link", "pair.copied": "Copied ✔", "pair.copyCode": "Copy code",
+    "pair.copy": "Copy link", "pair.copied": "Copied ✔", "pair.copyCode": "Copy code", "theme.title": "Theme", "theme.sea": "Sea", "theme.light": "Light", "theme.lavender": "Lavender", "theme.graphite": "Graphite",
     "b.pending": "PENDING",
   },
 };
 
-let lang = localStorage.getItem("monitoring_lang") || "ru";
+let lang = document.documentElement.dataset.lang || localStorage.getItem("monitoring_lang") || "ru";
 const LOCALES = { ru: "ru-RU", am: "hy-AM", en: "en-US" };
 
 function t(key, params) {
@@ -337,18 +337,53 @@ function applyI18n() {
   const titleEl = document.getElementById("page-title");
   if (titleEl) titleEl.textContent = t("page." + pageKey);
   document.querySelectorAll("[data-i18n]").forEach((el) => { el.textContent = t(el.dataset.i18n); });
-  document.querySelectorAll(".lang-switch button").forEach((b) =>
+  document.querySelectorAll("[data-i18n-title]").forEach((el) => { el.title = t(el.dataset.i18nTitle); });
+  markTheme();
+  document.querySelectorAll(".lang-switch button[data-lang]").forEach((b) =>
     b.classList.toggle("active", b.dataset.lang === lang)
   );
 }
 
 document.addEventListener("click", (event) => {
-  const langButton = event.target.closest(".lang-switch button");
+  const langButton = event.target.closest(".lang-switch button[data-lang]");
   if (!langButton || langButton.dataset.lang === lang) return;
   lang = langButton.dataset.lang;
   applyI18n();
+  saveUiPrefs();
   const renderer = PAGE_RENDERERS[document.body.dataset.page];
   if (renderer) renderer();
+});
+
+/* ---------- темы оформления ---------- */
+function saveUiPrefs() {
+  // Окно приложения не хранит localStorage между запусками — выбор хранится на сервере.
+  // Тема и язык уходят вместе, чтобы два запроса подряд не затирали друг друга.
+  const prefs = { theme: document.documentElement.dataset.theme || "sea", lang };
+  fetch("/api/monitoring/ui-prefs", {
+    method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(prefs),
+  }).catch(() => {});
+}
+
+function markTheme() {
+  const current = document.documentElement.dataset.theme || "sea";
+  document.querySelectorAll("[data-theme-choice]").forEach((b) =>
+    b.classList.toggle("active", b.dataset.themeChoice === current)
+  );
+}
+
+document.addEventListener("click", (event) => {
+  const pop = document.getElementById("theme-pop");
+  if (event.target.closest("#theme-btn")) {
+    if (pop) pop.hidden = !pop.hidden;
+    return;
+  }
+  const choice = event.target.closest("[data-theme-choice]");
+  if (choice) {
+    document.documentElement.dataset.theme = choice.dataset.themeChoice;
+    markTheme();
+    saveUiPrefs();
+  }
+  if (pop && !event.target.closest("#theme-pop")) pop.hidden = true;
 });
 
 /* ---------- утилиты ---------- */

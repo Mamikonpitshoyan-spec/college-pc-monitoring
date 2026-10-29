@@ -1,0 +1,34 @@
+/* Дополнительные темы интерфейса. «sea» (Морская и коралловая) — базовая тема в styles.css. */
+html[data-theme="light"] { --bg:#F4F7FA;--sidebar:#EAF0F5;--panel:#FFFFFF;--panel2:#F6F9FB; --border:#C5D1DC;--border-soft:#DFE6EC;--text:#0F1E2C;--muted:#4A5E70; --accent:#E2543F;--accent-soft:rgba(226,84,63,.10);--accent-line:rgba(226,84,63,.35); --ok:#16855A;--warn:#A87700;--crit:#C81E3A;--err:#C81E3A;--off:#7A8C9C }
+html[data-theme="light"] body { background:var(--bg);color:var(--text) }
+html[data-theme="light"] .b-ok { color:#0F6B47 }
+html[data-theme="light"] .b-warn { color:#7D5800 }
+html[data-theme="light"] .b-crit { color:#A3122B }
+html[data-theme="light"] .stat.off .value { color:#5E7183 }
+html[data-theme="light"] .track { background:#DDE5EC }
+html[data-theme="light"] .btn, html[data-theme="light"] .btn-primary, html[data-theme="light"] a.dl { color:#FFFFFF }
+html[data-theme="light"] .btn.ghost { color:var(--muted) }
+html[data-theme="light"] .modal-overlay { background:rgba(15,30,44,.35) }
+html[data-theme="light"] .mini-btn.auto.on { color:#B23A28 }
+html[data-theme="light"] .b-neutral { color:#B23A28 }
+html[data-theme="light"] input { background:#FFFFFF;color:#0F1E2C;border-color:#C5D1DC }
+html[data-theme="lavender"] { --bg:#F5F4FB;--sidebar:#ECEAF8;--panel:#FFFFFF;--panel2:#F8F7FD; --border:#D6D2EE;--border-soft:#E8E5F6;--text:#2B2A45;--muted:#615F80; --accent:#7466D3;--accent-soft:rgba(116,102,211,.10);--accent-line:rgba(116,102,211,.35); --ok:#238A6A;--warn:#A87700;--crit:#C7385A;--err:#C7385A;--off:#8B89A6 }
+html[data-theme="lavender"] body { background:var(--bg);color:var(--text) }
+html[data-theme="lavender"] .b-ok { color:#1B6F55 }
+html[data-theme="lavender"] .b-warn { color:#7D5800 }
+html[data-theme="lavender"] .b-crit { color:#A32549 }
+html[data-theme="lavender"] .stat.off .value { color:#6E6C8C }
+html[data-theme="lavender"] .track { background:#E4E1F3 }
+html[data-theme="lavender"] .btn, html[data-theme="lavender"] .btn-primary, html[data-theme="lavender"] a.dl { color:#FFFFFF }
+html[data-theme="lavender"] .btn.ghost { color:var(--muted) }
+html[data-theme="lavender"] .modal-overlay { background:rgba(43,42,69,.30) }
+html[data-theme="lavender"] .mini-btn.auto.on { color:#5446B8 }
+html[data-theme="lavender"] .b-neutral { color:#5446B8 }
+html[data-theme="lavender"] input { background:#FFFFFF;color:#2B2A45;border-color:#D6D2EE }
+html[data-theme="graphite"] { --bg:#121417;--sidebar:#16191D;--panel:#1C2026;--panel2:#21262D; --border:#2E353E;--border-soft:#262C34;--text:#E6EAF0;--muted:#8D97A4; --accent:#4FD1A5;--accent-soft:rgba(79,209,165,.12);--accent-line:rgba(79,209,165,.35); --ok:#6FCF97;--warn:#E9B949;--crit:#F2687B;--err:#F2687B;--off:#5D6673 }
+html[data-theme="graphite"] body { background:var(--bg);color:var(--text) }
+html[data-theme="graphite"] .btn, html[data-theme="graphite"] .btn-primary, html[data-theme="graphite"] a.dl { color:#0E1512 }
+html[data-theme="graphite"] .mini-btn.auto.on { color:#8FE6C8 }
+html[data-theme="graphite"] .b-neutral { color:#8FE6C8 }
+html[data-theme="graphite"] input { background:#16191D;color:#E6EAF0 }
+html[data-theme="graphite"] .btn.ghost { color:var(--muted) }

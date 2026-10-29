@@ -7,11 +7,13 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
 from app.api.auth import require_admin_page  # noqa: E402
+from app.api.monitoring import current_ui_prefs
 
 router = APIRouter(tags=["pages"], dependencies=[Depends(require_admin_page)])
 
 _TEMPLATES_DIR = Path(__file__).resolve().parents[1] / "templates"
 templates = Jinja2Templates(directory=str(_TEMPLATES_DIR))
+templates.env.globals["ui_prefs"] = current_ui_prefs
 
 
 def _page(request: Request, template: str, page_name: str, **context) -> HTMLResponse:
