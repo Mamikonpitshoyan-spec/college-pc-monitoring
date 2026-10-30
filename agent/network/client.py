@@ -77,7 +77,7 @@ class TokenStore:
 
 
 class AgentApiClient:
-    """Speak the Level 4 agent REST contract against one Monitoring Server."""
+    """Speak the agent REST contract against one Monitoring Server."""
 
     def __init__(
         self,

@@ -1,4 +1,4 @@
-"""Level 5 retention: keep the metrics history bounded."""
+"""Retention: keep the metrics history bounded."""
 
 from __future__ import annotations
 

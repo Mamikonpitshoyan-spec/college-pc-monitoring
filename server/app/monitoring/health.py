@@ -1,4 +1,4 @@
-"""Level 9 health logic: thresholds, aggregation, and anti-flapping.
+"""Health logic: thresholds, aggregation, and anti-flapping.
 
 Pure computation with no I/O so it is unit-testable in isolation.
 

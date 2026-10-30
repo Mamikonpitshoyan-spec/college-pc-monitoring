@@ -1,4 +1,4 @@
-"""Level 11 pairing: one-time codes and administrator approval.
+"""Pairing: one-time codes and administrator approval.
 
 Flow: the administrator creates a code (valid 15 minutes, single device) and
 gives it to the user. The agent submits its identity with the code, the device

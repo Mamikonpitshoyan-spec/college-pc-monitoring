@@ -1,4 +1,4 @@
-"""Health engine: applies Level 9 logic to devices and persists alerts/events."""
+"""Health engine: applies logic to devices and persists alerts/events."""
 
 from __future__ import annotations
 

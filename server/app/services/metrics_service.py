@@ -13,7 +13,7 @@ from app.services.agent_service import utc_now
 
 
 class MetricsService:
-    """Persist raw v1.0 snapshots and evaluate device health (Level 9)."""
+    """Persist raw v1.0 snapshots and evaluate device health."""
 
     @staticmethod
     def submit(database: Session, device: Device, payload: MetricsSubmission) -> Metric:

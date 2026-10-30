@@ -191,7 +191,7 @@ class MonitoringApiTests(unittest.TestCase):
 
 
 class DashboardApiTests(unittest.TestCase):
-    """Level 6 additions: latest summary, metrics limit, and HTML pages."""
+    """Additions: latest summary, metrics limit, and HTML pages."""
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -272,7 +272,7 @@ class DashboardApiTests(unittest.TestCase):
 
 
 class HealthAlertsTests(unittest.TestCase):
-    """Level 9 end-to-end: thresholds, anti-flapping, alerts, events."""
+    """End-to-end: thresholds, anti-flapping, alerts, events."""
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -358,7 +358,7 @@ class HealthAlertsTests(unittest.TestCase):
 
 
 class PagesTests(unittest.TestCase):
-    """All Level 6/9 dashboard pages render with their titles."""
+    """All dashboard pages render with their titles."""
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -391,7 +391,7 @@ class PagesTests(unittest.TestCase):
 
 
 class RetentionAndDeleteTests(unittest.TestCase):
-    """Level 5 retention pruning and device deletion."""
+    """Retention pruning and device deletion."""
 
     @classmethod
     def setUpClass(cls) -> None:

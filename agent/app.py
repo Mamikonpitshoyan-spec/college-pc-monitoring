@@ -37,16 +37,6 @@ def is_admin() -> bool:
         return False
 
 
-def self_elevate() -> None:
-    """Relaunch this exe elevated (frozen builds only)."""
-    if not getattr(sys, "frozen", False):
-        return
-    ctypes.windll.shell32.ShellExecuteW(
-        None, "runas", sys.executable, " ".join(sys.argv[1:]), None, 1
-    )
-    sys.exit(0)
-
-
 if getattr(sys, "frozen", False):
     CONFIG_DIR = Path(sys.executable).resolve().parent
 else:
@@ -55,7 +45,6 @@ DATA_DIR = Path(os.getenv("PROGRAMDATA", "C:/ProgramData")) / "MonitoringAgent"
 STATUS_PATH = Path(
     os.getenv("MONITORING_STATUS_PATH", str(DATA_DIR / "status.json"))
 )
-INSTALLED_STATUS_PATH = SERVICE_DIR / "status.json"
 CODE_ALPHABET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789"  # как на сервере (services/pairing.py)
 ADDRESS_BASE_PORT = 8000
 ADDRESS_PORT_SPAN = 32

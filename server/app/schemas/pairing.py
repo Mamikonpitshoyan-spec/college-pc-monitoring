@@ -1,4 +1,4 @@
-"""Pydantic schemas for Level 11 pairing endpoints."""
+"""Pydantic schemas for pairing endpoints."""
 
 from __future__ import annotations
 

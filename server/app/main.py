@@ -18,7 +18,7 @@ import app.models  # noqa: F401 - registers all SQLAlchemy models before create_
 
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
-    """Initialize tables and start the Level 9 offline sweeper."""
+    """Initialize tables and start the offline sweeper."""
     initialize_database()
     sweep_task = asyncio.create_task(offline_sweeper())
     yield

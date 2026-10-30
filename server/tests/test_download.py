@@ -1,4 +1,4 @@
-"""Level 12: agent installer package download."""
+"""Agent installer package download."""
 
 import io
 import os

@@ -1,4 +1,4 @@
-"""Read routes for alerts and the event log (Level 9)."""
+"""Read routes for alerts and the event log."""
 
 from datetime import datetime
 

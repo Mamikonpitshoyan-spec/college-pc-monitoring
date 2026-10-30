@@ -1,4 +1,4 @@
-"""Background loop: offline sweep (Level 9) and history retention (Level 5)."""
+"""Background loop: offline sweep and history retention."""
 
 from __future__ import annotations
 

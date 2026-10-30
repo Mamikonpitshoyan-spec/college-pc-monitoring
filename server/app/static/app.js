@@ -533,7 +533,7 @@ function schedule(fn) {
   setInterval(tick, POLL_MS);
 }
 
-// Level 7: баннер состояния связи (вставляется в шапку на всех страницах)
+// Баннер состояния связи (вставляется в шапку на всех страницах)
 function ensureConnBanner() {
   if (document.getElementById("conn-banner")) return;
   const banner = document.createElement("div");
@@ -1049,7 +1049,7 @@ async function renderSettings() {
       <td>${esc(name)}</td><td class="mono">${esc(warn)}</td><td class="mono">${esc(crit)}</td>
     </tr>`).join("")}</tbody></table>`;
   systemBox.innerHTML = `
-    <div class="kv"><span class="k">${t("set.server")}</span><span class="v">FastAPI · stage 9</span></div>
+    <div class="kv"><span class="k">${t("set.server")}</span><span class="v">FastAPI · Python</span></div>
     <div class="kv"><span class="k">${t("set.db")}</span><span class="v">SQLite</span></div>
     <div class="kv"><span class="k">${t("set.poll")}</span><span class="v">5 s (+~9 s)</span></div>
     <div class="kv"><span class="k">${t("set.offlineAfter")}</span><span class="v">${config.offline_after_seconds} s</span></div>

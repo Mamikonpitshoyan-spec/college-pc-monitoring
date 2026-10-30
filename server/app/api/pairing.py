@@ -1,4 +1,4 @@
-"""Level 11 pairing routes: administrator actions and agent endpoints."""
+"""Pairing routes: administrator actions and agent endpoints."""
 
 from fastapi import APIRouter, Depends
 

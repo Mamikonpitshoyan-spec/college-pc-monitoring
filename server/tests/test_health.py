@@ -1,4 +1,4 @@
-"""Unit tests for Level 9 health logic (thresholds + anti-flapping)."""
+"""Unit tests for health logic (thresholds + anti-flapping)."""
 
 import unittest
 

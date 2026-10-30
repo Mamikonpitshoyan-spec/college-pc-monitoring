@@ -1,4 +1,4 @@
-"""Unit tests for the Level 4 agent client and reporting loop."""
+"""Unit tests for the agent client and reporting loop."""
 
 import json
 import tempfile

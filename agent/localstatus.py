@@ -1,4 +1,4 @@
-"""Local status file for the user-facing status app (Level 12 UX).
+"""Local status file for the user-facing status app.
 
 The reporting loop merges its full status into ``status.json`` after every
 cycle attempt, and a fast sampler thread refreshes headline cpu/ram every

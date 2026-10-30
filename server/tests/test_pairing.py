@@ -1,4 +1,4 @@
-"""Level 11 pairing tests: one-time codes, approval, rejection, expiry."""
+"""Pairing tests: one-time codes, approval, rejection, expiry."""
 
 import unittest
 
